@@ -639,4 +639,12 @@ vec3 scatter (vec3 seed) {
 
   return vec3(x, y, z);
 }
+
+const music = document.getElementById("bgMusic");
+
+window.addEventListener("click", () => {
+  music.play();
+});
+
+
 `;
