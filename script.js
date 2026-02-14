@@ -14,7 +14,7 @@ import {
   SpriteMaterial,
   Group,
   Clock,
-  Vector3, 
+  Vector3,
 } from "https://cdn.skypack.dev/three@0.136.0";
 import { OrbitControls } from "https://cdn.skypack.dev/three@0.136.0/examples/jsm/controls/OrbitControls";
 import { TWEEN } from "https://cdn.skypack.dev/three@0.136.0/examples/jsm/libs/tween.module.min.js";
@@ -399,75 +399,75 @@ scene.add(universe);
 
 
 
-const shootingStarCount = 200; 
+const shootingStarCount = 200;
 const shootingStarGeometry = new BufferGeometry();
 
 const ssPosition = new Float32Array(shootingStarCount * 3);
 const ssVelocity = new Float32Array(shootingStarCount * 3);
 const ssStartTime = new Float32Array(shootingStarCount);
 const ssSize = new Float32Array(shootingStarCount);
-const ssColor = new Float32Array(shootingStarCount * 3); 
+const ssColor = new Float32Array(shootingStarCount * 3);
 
 function getRandomSpherePoint(radius, innerRadius = 0) {
-    const u = Math.random();
-    const v = Math.random();
-    const theta = u * 2.0 * Math.PI;
-    const phi = Math.acos(2.0 * v - 1.0);
-    
-    let r = innerRadius + Math.random() * (radius - innerRadius);
+  const u = Math.random();
+  const v = Math.random();
+  const theta = u * 2.0 * Math.PI;
+  const phi = Math.acos(2.0 * v - 1.0);
 
-    const x = r * Math.sin(phi) * Math.cos(theta);
-    const y = r * Math.sin(phi) * Math.sin(theta);
-    const z = r * Math.cos(phi);
-    return new Vector3(x, y, z);
+  let r = innerRadius + Math.random() * (radius - innerRadius);
+
+  const x = r * Math.sin(phi) * Math.cos(theta);
+  const y = r * Math.sin(phi) * Math.sin(theta);
+  const z = r * Math.cos(phi);
+  return new Vector3(x, y, z);
 }
 
-const ssOuterRadius = 6.0; 
-const ssInnerRadius = 0.5; 
-const ssLifeSpan = 3.0; 
+const ssOuterRadius = 6.0;
+const ssInnerRadius = 0.5;
+const ssLifeSpan = 3.0;
 
 for (let i = 0; i < shootingStarCount; i++) {
-    const startPos = getRandomSpherePoint(ssOuterRadius, ssInnerRadius);
-    ssPosition[i * 3 + 0] = startPos.x;
-    ssPosition[i * 3 + 1] = startPos.y;
-    ssPosition[i * 3 + 2] = startPos.z;
-    
-    const vel = startPos.clone().normalize().multiplyScalar(1.0 + Math.random() * 0.5); 
-    vel.x += (Math.random() - 0.5) * 0.5;
-    vel.y += (Math.random() - 0.5) * 0.5;
-    vel.z += (Math.random() - 0.5) * 0.5;
-    vel.normalize();
+  const startPos = getRandomSpherePoint(ssOuterRadius, ssInnerRadius);
+  ssPosition[i * 3 + 0] = startPos.x;
+  ssPosition[i * 3 + 1] = startPos.y;
+  ssPosition[i * 3 + 2] = startPos.z;
 
-    ssVelocity[i * 3 + 0] = vel.x;
-    ssVelocity[i * 3 + 1] = vel.y;
-    ssVelocity[i * 3 + 2] = vel.z;
+  const vel = startPos.clone().normalize().multiplyScalar(1.0 + Math.random() * 0.5);
+  vel.x += (Math.random() - 0.5) * 0.5;
+  vel.y += (Math.random() - 0.5) * 0.5;
+  vel.z += (Math.random() - 0.5) * 0.5;
+  vel.normalize();
 
-    ssStartTime[i] = Math.random() * ssLifeSpan;
-    ssSize[i] = Math.random() * 3 + 2.0; 
+  ssVelocity[i * 3 + 0] = vel.x;
+  ssVelocity[i * 3 + 1] = vel.y;
+  ssVelocity[i * 3 + 2] = vel.z;
 
-    
-    const color = new Color();
-    color.setHSL(Math.random() * 0.2 + 0.6, 0.5 + Math.random() * 0.5, 0.7 + Math.random() * 0.3); 
-    ssColor[i * 3 + 0] = color.r;
-    ssColor[i * 3 + 1] = color.g;
-    ssColor[i * 3 + 2] = color.b;
+  ssStartTime[i] = Math.random() * ssLifeSpan;
+  ssSize[i] = Math.random() * 3 + 2.0;
+
+
+  const color = new Color();
+  color.setHSL(Math.random() * 0.2 + 0.6, 0.5 + Math.random() * 0.5, 0.7 + Math.random() * 0.3);
+  ssColor[i * 3 + 0] = color.r;
+  ssColor[i * 3 + 1] = color.g;
+  ssColor[i * 3 + 2] = color.b;
 }
 
 shootingStarGeometry.setAttribute("position", new BufferAttribute(ssPosition, 3));
 shootingStarGeometry.setAttribute("aVelocity", new BufferAttribute(ssVelocity, 3));
 shootingStarGeometry.setAttribute("aStartTime", new BufferAttribute(ssStartTime, 1));
 shootingStarGeometry.setAttribute("size", new BufferAttribute(ssSize, 1));
-shootingStarGeometry.setAttribute("aColor", new BufferAttribute(ssColor, 3)); 
+shootingStarGeometry.setAttribute("aColor", new BufferAttribute(ssColor, 3));
 
 const shootingStarMaterial = new RawShaderMaterial({
-    uniforms: {
-        uTime: { value: 0 },
-        uSize: { value: renderer.getPixelRatio() },
-        uAlphaMap: { value: alphaMap },
-        uSpeed: { value: 10.0 }, 
-        uLifeSpan: { value: ssLifeSpan }
-    },
-    vertexShader: `
+  uniforms: {
+    uTime: { value: 0 },
+    uSize: { value: renderer.getPixelRatio() },
+    uAlphaMap: { value: alphaMap },
+    uSpeed: { value: 10.0 },
+    uLifeSpan: { value: ssLifeSpan }
+  },
+  vertexShader: `
         precision highp float;
         attribute vec3 position;
         attribute vec3 aVelocity;
@@ -503,7 +503,7 @@ const shootingStarMaterial = new RawShaderMaterial({
             gl_PointSize = (adjustedSize * uSize) / -mvp.z; 
         }
     `,
-    fragmentShader: `
+  fragmentShader: `
         precision highp float;
         uniform sampler2D uAlphaMap;
         varying float vProgress;
@@ -523,10 +523,10 @@ const shootingStarMaterial = new RawShaderMaterial({
             gl_FragColor = vec4(vColor, a * fade * 0.9); // Opacidad alta en el centro
         }
     `,
-    transparent: true,
-    depthTest: false,
-    depthWrite: false,
-    blending: AdditiveBlending,
+  transparent: true,
+  depthTest: false,
+  depthWrite: false,
+  blending: AdditiveBlending,
 });
 
 const shootingStars = new Points(shootingStarGeometry, shootingStarMaterial);
@@ -547,7 +547,7 @@ new TWEEN.Tween({
     radius: 1.618,
     spin: Math.PI * 2,
     randomness: 0.5,
-    rotate: Math.PI * 4, 
+    rotate: Math.PI * 4,
   })
   .duration(5000)
   .easing(TWEEN.Easing.Cubic.InOut)
@@ -558,22 +558,22 @@ new TWEEN.Tween({
 
     galaxy.rotation.y = rotate;
     universe.rotation.y = rotate / 3;
-    spriteGroup.rotation.y = rotate; 
+    spriteGroup.rotation.y = rotate;
   })
   .start();
 
 setTimeout(() => {
   spriteGroup.visible = true;
-}, 2000); 
+}, 2000);
 
 
 const colorPairs = [
-  { inn: new Color("#f40"), out: new Color("#a7f") }, 
-  { inn: new Color("#40f"), out: new Color("#f7a") }, 
-  { inn: new Color("#0f4"), out: new Color("#7fa") }, 
+  { inn: new Color("#f40"), out: new Color("#a7f") },
+  { inn: new Color("#40f"), out: new Color("#f7a") },
+  { inn: new Color("#0f4"), out: new Color("#7fa") },
   { inn: new Color("#ff0"), out: new Color("#f0a") },
-  { inn: new Color("#f00"), out: new Color("#00f") }, 
-  { inn: new Color("#0ff"), out: new Color("#f0f") }, 
+  { inn: new Color("#f00"), out: new Color("#00f") },
+  { inn: new Color("#0ff"), out: new Color("#f0f") },
 ];
 let colorIndex = 0;
 
@@ -591,18 +591,18 @@ setInterval(() => {
     .to({ r: newOut.r, g: newOut.g, b: newOut.b }, 1000)
     .easing(TWEEN.Easing.Quadratic.InOut)
     .start();
-}, 2000); 
+}, 2000);
 
 
 
-const clock = new Clock(); 
+const clock = new Clock();
 
 renderer.setAnimationLoop(() => {
-  const elapsedTime = clock.getElapsedTime(); 
+  const elapsedTime = clock.getElapsedTime();
 
   galaxyMaterial.uniforms.uTime.value = elapsedTime / 2;
   universeMaterial.uniforms.uTime.value = elapsedTime / 3;
-  shootingStarMaterial.uniforms.uTime.value = elapsedTime; 
+  shootingStarMaterial.uniforms.uTime.value = elapsedTime;
 
   TWEEN.update();
   orbit.update();
@@ -639,12 +639,12 @@ vec3 scatter (vec3 seed) {
 
   return vec3(x, y, z);
 }
+`;
 
 const music = document.getElementById("bgMusic");
 
 window.addEventListener("click", () => {
   music.play();
-});
-
+})
 
 `;
